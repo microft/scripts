@@ -1,5 +1,11 @@
 #!/usr/bin/perl
 #
+# This scripts expects a csv file in the format Show Name;Quality
+# and merges all the resulting RSS feeds from ezrss.it
+#
+# Example:
+# Burn Notice;720p
+# IT Crowd;PDTV
 #
 use strict;
 use warnings;
