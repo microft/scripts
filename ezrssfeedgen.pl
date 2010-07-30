@@ -6,6 +6,9 @@
 # Example:
 # Burn Notice;720p
 # IT Crowd;PDTV
+# 
+# Should be called like this:
+# /usr/bin/perl ezrssfeedgen.pl tvshows.csv > tvshows.xml
 #
 use strict;
 use warnings;
