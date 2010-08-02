@@ -23,8 +23,8 @@ while(<>){
   $url =~ s/NAME/$name/;
   $url =~ s/QUALITY/$quality/;
   $feed->merge($url);
-  #print $url;
 }
+$feed->limit_item(100);
 my $now = time();
 $feed->pubDate( $now );    
 print $feed->to_string();
