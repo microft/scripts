@@ -24,7 +24,7 @@ while(<>){
   $url =~ s/QUALITY/$quality/;
   $feed->merge($url);
 }
-$feed->limit_item(75);
+$feed->limit_item(50);
 my $now = time();
 $feed->pubDate( $now );    
 print $feed->to_string();
