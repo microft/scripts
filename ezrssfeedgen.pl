@@ -24,6 +24,9 @@ while(<>){
   $url =~ s/QUALITY/$quality/;
   $feed->merge($url);
 }
+my $hostname = `hostname -f`;
+chomp($hostname);
+$feed->title("$hostname TV Shows");
 $feed->limit_item(50);
 my $now = time();
 $feed->pubDate( $now );    
