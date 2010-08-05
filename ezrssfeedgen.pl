@@ -27,7 +27,7 @@ while(<>){
 my $hostname = `hostname -f`;
 chomp($hostname);
 $feed->title("$hostname TV Shows");
-$feed->limit_item(50);
+$feed->limit_item(25);
 my $now = time();
 $feed->pubDate( $now );    
 print $feed->to_string();
