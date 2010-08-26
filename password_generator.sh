@@ -30,6 +30,6 @@ COUNT=`echo $KNOW | cut -b 16-21`
 echo -n "Your password is: "
 BASE=`dd if=$KEYFILE bs=100 skip=$SKIP count=$COUNT 2>/dev/null | sha512sum `
 echo $BASE | cut -b 1-10
-echo "$USERNAME $SERVICE" >> ~/Dropbox/services.txt
+[ -e ~/Dropbox/services.txt ] && echo "$USERNAME $SERVICE" >> ~/Dropbox/services.txt
 sleep 10 
 clear
