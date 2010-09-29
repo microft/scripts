@@ -1,0 +1,10 @@
+#!/bin/bash
+
+CONVERT=`which convert`
+
+for i in $@; do 
+filename=${i%.*}
+$CONVERT $i $filename.JPG
+done
+
+
