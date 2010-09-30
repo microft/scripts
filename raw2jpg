@@ -1,14 +1,16 @@
 #!/bin/bash
 
-CONVERT=`which convert`
-REGEXP='^(.*)\.CR2$'
+#ufraw-batch --silent --wb=camera --black-point=auto --exposure=auto --create-id=also --out-type=png --out-depth=16 --output=/tmp/magick-XXi6GSVT.png /tmp/magick-XX2EZNdJ
+
+COMMAND=`which convert`
+REGEXP='^(.*)\.(crw|CRW|cr2|CR2)$'
 
 for i in $@; do 
   if [[ "$i" =~ $REGEXP ]]; then
     #filename=${i%.*} 
     filename=${BASH_REMATCH[1]}
     echo "$i -> $filename.JPG"
-    $CONVERT $i $filename.JPG
+    $COMMAND $i $filename.JPG
   else
     echo "$i is not raw file"
   fi
