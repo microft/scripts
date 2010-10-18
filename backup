@@ -1,0 +1,53 @@
+#!/bin/bash
+#
+#
+#
+
+BASE_TARGET=~/Backups/
+
+if [ -z "$1" ]; 
+then
+  echo ">>> No parameters! <<<"
+  exit
+fi
+
+TARGET_FINAL=$1
+DATE=`date +%F-%H-%M`
+echo backing up $1
+
+if [ ! -e "$BASE_TARGET$TARGET_FINAL" ]; 
+then 
+  echo "creating base backup dir $BASE_TARGET$TARGET_FINAL"
+  mkdir -p $BASE_TARGET$TARGET_FINAL
+elif [ ! -d $BASE_TARGET$TARGET_FINAL ];
+then 
+  echo ">>> $BASE_TARGET$TARGET_FINAL is not a directory <<<"
+  exit
+fi
+
+LAST_BACKUP=$(ls -lctr $BASE_TARGET$TARGET_FINAL | grep "^d" | grep -v "incomplete$" | tail -n1 | gawk '{print $NF }')
+
+BACKUP=$BASE_TARGET$TARGET_FINAL$DATE
+TEMPBACKUP=$BACKUP-incomplete
+mkdir -p $TEMPBACKUP
+
+EXCLUDES_FILE="excludes.txt"
+EXCLUDES="$BASE_TARGET$TARGET_FINAL$EXCLUDES_FILE"
+
+if [ -z "$LAST_BACKUP" ]; then
+  echo "No previous backup found. Making first backup to $BACKUP"
+  rsync --archive --one-file-system --human-readable --numeric-ids $1 $TEMPBACKUP
+  touch $EXCLUDES
+else
+  LINK_DEST=$BASE_TARGET$TARGET_FINAL$LAST_BACKUP
+  echo incrementing over $LINK_DEST
+  echo backing up to $BACKUP
+  echo excluding files in $EXCLUDES
+
+  rsync --archive --one-file-system --hard-links \
+    --human-readable --inplace --numeric-ids --delete \
+    --delete-excluded --exclude-from=$EXCLUDES \
+    --link-dest=$LINK_DEST $1 $TEMPBACKUP/ 
+fi
+
+mv $TEMPBACKUP $BACKUP
