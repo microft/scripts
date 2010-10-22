@@ -3,7 +3,15 @@
 COMMAND=`which ufraw-batch`
 FLAGS="--silent --wb=camera --black-point=auto --create-id=also --out-type=jpg --out-depth=16"
 
-REGEXP='^(.*)\.(crw|CRW|cr2|CR2)$'
+if [ -z "$COMMAND" ]; then
+  echo "ufraw-batch not found!"
+  exit
+fi
+
+shopt -s nocaseglob
+
+#REGEXP='^(.*)\.(crw|CRW|cr2|CR2)$'
+REGEXP='^(.*)\.(crw|cr2)$'
 
 for i in $@; do 
   if [[ "$i" =~ $REGEXP ]]; then
