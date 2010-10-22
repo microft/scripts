@@ -7,7 +7,7 @@ BASE_TARGET=~/Backups/
 
 if [ -z "$1" ]; 
 then
-  echo ">>> No parameters! <<<"
+  echo ">>> Not enough parameters! <<<"
   exit
 else
   if [ -z "$2" ];
