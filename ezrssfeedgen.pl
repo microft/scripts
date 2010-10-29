@@ -14,7 +14,7 @@ use strict;
 use warnings;
 use XML::FeedPP;
 my $feed = XML::FeedPP::RSS->new();
-my $search_url = 'http://ezrss.it/search/index.php?show_name=NAME&date=&quality=QUALITY&release_group=&mode=rss';
+my $search_url = 'http://ezrss.it/search/index.php?simple&show_name=NAME&date=&quality=QUALITY&release_group=&mode=rss';
 while(<>){
   chomp;
   (my $name, my $quality) = split(/;/,$_);
