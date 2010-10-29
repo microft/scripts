@@ -18,10 +18,14 @@ my $search_url = 'http://ezrss.it/search/index.php?simple&show_name=NAME&date=&q
 while(<>){
   chomp;
   (my $name, my $quality) = split(/;/,$_);
+  $name =~ s/[\#\!\*\$]/ /g;
+  $name =~ s/^\s+//g;
+  $name =~ s/\s+$//g;
   $name =~ s/\s+/+/g;
   my $url = $search_url;
   $url =~ s/NAME/$name/;
   $url =~ s/QUALITY/$quality/;
+  print "$url\n";
   $feed->merge($url);
 }
 my $hostname = `hostname -f`;
