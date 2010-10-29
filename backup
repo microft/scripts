@@ -2,65 +2,79 @@
 #
 #
 #
+DATE=`date +%F-%H-%M`
 
-BASE_TARGET=~/Backups/
-
+# Check if we have a first parameter
 if [ -z "$1" ]; 
 then
   echo ">>> Not enough parameters! <<<"
   exit
-else
-  if [ -z "$2" ];
-  then
-    TARGET_FINAL=${1/#\//}
-    FULL_TARGET_PATH=$BASE_TARGET$TARGET_FINAL
-  else
-    TARGET_FINAL=$2
-    FULL_TARGET_PATH=$2
-  fi
 fi
 
-DATE=`date +%F-%H-%M`
-echo backing up $1
-
-if [ ! -e "$FULL_TARGET_PATH" ]; 
-then 
-  echo "creating base backup dir $FULL_TARGET_PATH"
-  mkdir -p $FULL_TARGET_PATH
-elif [ ! -d $FULL_TARGET_PATH ];
-then 
-  echo ">>> $FULL_TARGET_PATH is not a directory <<<"
+# Check that we have a second paramenter
+if [ -z "$2" ];
+then
+  echo ">>> Need a second parameter! <<<"
   exit
 fi
 
-LAST_BACKUP=$(ls -lctr $FULL_TARGET_PATH | grep "^d" | grep -v "incomplete$" | tail -n1 | gawk '{print $NF }')
+# Get absolute path for first parameter
+if [[ $1 =~ ^/ ]];
+then
+    ORIGIN=$1
+else
+    ORIGIN=$PWD/$1
+fi
+echo "> backing up from $ORIGIN"
 
-BACKUP=$FULL_TARGET_PATH$DATE
-TEMPBACKUP=$BACKUP-incomplete
-mkdir -p $TEMPBACKUP
+# Put a trailing backslash in base target, if not present
+if [[ $2 =~ /$ ]];
+then
+  BASETARGET=$2
+else
+  BASETARGET="$2/"
+fi
+
+# Get absolute path for second parameter
+if [[ $BASETARGET =~ ^/ ]];
+then
+  TEMPTARGET=$BASETARGET$DATE-incomplete/
+  FULLTARGET=$BASETARGET$DATE/
+else
+  BASETARGET=$PWD/$BASETARGET
+  TEMPTARGET=$BASETARGET$DATE-incomplete/
+  FULLTARGET=$BASETARGET$DATE/
+fi
+echo "> backing up to $FULLTARGET"
+echo "> (with temporary dir in $TEMPTARGET)"
+echo "> BASETARGET $BASETARGET"
+
+LAST_BACKUP=$(ls -lctr $BASETARGET | grep "^d" | grep -v "incomplete$" | tail -n1 | gawk '{print $NF }')
+FULL_LAST_BACKUP=$BASETARGET$LAST_BACKUP/
 
 EXCLUDES_FILE="excludes.txt"
-EXCLUDES="$FULL_TARGET_PATH$EXCLUDES_FILE"
+EXCLUDES="$BASETARGET$EXCLUDES_FILE"
 
 if [ -z "$LAST_BACKUP" ]; then
-  echo "No previous backup found. Making first backup to $BACKUP"
-  rsync --archive --one-file-system --human-readable --numeric-ids $1 $TEMPBACKUP
+  echo "> No previous backup found. Making first backup to $FULLTARGET"
+  mkdir -p $TEMPTARGET
+  rsync --archive --one-file-system --human-readable \
+    --numeric-ids $ORIGIN $TEMPTARGET
   touch $EXCLUDES
-elif [ "$LAST_BACKUP" = "$BACKUP" ]; then
-  echo "Resyncing to same backup $BACKUP"
-  rsync --archive --one-file-system --human-readable --numeric-ids $1 $BACKUP
+elif [ "$FULL_LAST_BACKUP" = "$FULLTARGET" ]; then
+  echo "> Resyncing to same backup $FULLTARGET"
+  rsync --archive --one-file-system --human-readable --numeric-ids $ORIGIN $FULL_LAST_BACKUP
 else
-  LINK_DEST=$FULL_TARGET_PATH$LAST_BACKUP
-  echo incrementing over $LINK_DEST
-  echo backing up to $BACKUP
-  echo excluding files in $EXCLUDES
+  echo "> incrementing over $FULL_LAST_BACKUP"
+  echo "> excluding files in $EXCLUDES"
 
+  mkdir -p $TEMPTARGET
   rsync --archive --one-file-system --hard-links \
     --human-readable --inplace --numeric-ids --delete \
     --delete-excluded --exclude-from=$EXCLUDES \
-    --link-dest=$LINK_DEST $1 $TEMPBACKUP/ 
+    --link-dest=$FULL_LAST_BACKUP $ORIGIN $TEMPTARGET 
 fi
 
-if [ -e "$TEMPBACKUP" ]; then
-  mv $TEMPBACKUP $BACKUP
+if [ -e "$TEMPTARGET" ]; then
+  mv $TEMPTARGET $FULLTARGET
 fi
