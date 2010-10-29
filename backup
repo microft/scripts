@@ -63,7 +63,8 @@ if [ -z "$LAST_BACKUP" ]; then
   touch $EXCLUDES
 elif [ "$FULL_LAST_BACKUP" = "$FULLTARGET" ]; then
   echo "> Resyncing to same backup $FULLTARGET"
-  rsync --archive --one-file-system --human-readable --numeric-ids $ORIGIN $FULL_LAST_BACKUP
+  rsync --archive --one-file-system --human-readable \
+    --numeric-ids $ORIGIN $FULL_LAST_BACKUP
 else
   echo "> incrementing over $FULL_LAST_BACKUP"
   echo "> excluding files in $EXCLUDES"
