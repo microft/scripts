@@ -25,7 +25,7 @@ while(<>){
   my $url = $search_url;
   $url =~ s/NAME/$name/;
   $url =~ s/QUALITY/$quality/;
-  print "$url\n";
+  #print "$url\n";
   $feed->merge($url);
 }
 my $hostname = `hostname -f`;

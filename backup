@@ -54,13 +54,16 @@ FULL_LAST_BACKUP=$BASETARGET$LAST_BACKUP/
 
 EXCLUDES_FILE="excludes.txt"
 EXCLUDES="$BASETARGET$EXCLUDES_FILE"
+if [ ! -e "$EXCLUDES" ];
+then
+  touch $EXCLUDES
+fi
 
 if [ -z "$LAST_BACKUP" ]; then
   echo "> No previous backup found. Making first backup to $FULLTARGET"
   mkdir -p $TEMPTARGET
   rsync --archive --one-file-system --human-readable \
     --numeric-ids $ORIGIN $TEMPTARGET
-  touch $EXCLUDES
 elif [ "$FULL_LAST_BACKUP" = "$FULLTARGET" ]; then
   echo "> Resyncing to same backup $FULLTARGET"
   rsync --archive --one-file-system --human-readable \
