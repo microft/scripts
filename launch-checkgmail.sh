@@ -1,5 +1,6 @@
 #!/bin/bash
+COMMAND=`which checkgmail`
 for i in ~/.checkgmail/prefs*.xml ; do
-  checkgmail -profile=$(expr $i : ".*prefs-\(.*\).xml$") &
+  $COMMAND -profile=$(expr $i : ".*prefs-\(.*\).xml$") &
 done
 
