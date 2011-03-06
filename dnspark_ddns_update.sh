@@ -1,9 +1,10 @@
 #!/bin/bash
-USERNAME=mycroft
-PASSWORD=dakota6
-HOSTNAME=fish.microft.org
-IP=123.123.123.123
+HOSTNAME=$1
+IP=$2
+USERNAME=$3
+PASSWORD=$4
 
 
-curl "https://$USERNAME:$PASSWORD@www.dnspark.net/api/dynamic/update.php?hostname=$HOSTNAME&ip=$IP&mx=ON&mxpri=5"
+CURL=`which curl`
+$CURL "https://$USERNAME:$PASSWORD@www.dnspark.net/api/dynamic/update.php?hostname=$HOSTNAME&ip=$IP&mx=ON&mxpri=5"
 
