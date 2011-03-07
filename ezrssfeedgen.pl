@@ -25,12 +25,11 @@ while(<>){
   my $url = $search_url;
   $url =~ s/NAME/$name/;
   $url =~ s/QUALITY/$quality/;
-  #print "$url\n";
   if ($extra) {
       $url .= $extra;
   }
-  print $url ,"\n";
-  #$feed->merge($url);
+  #print $url ,"\n";
+  $feed->merge($url);
 }
 my $hostname = `hostname -f`;
 chomp($hostname);
@@ -38,4 +37,4 @@ $feed->title("$hostname TV Shows");
 $feed->limit_item(25);
 my $now = time();
 $feed->pubDate( $now );    
-#print $feed->to_string();
+print $feed->to_string();
