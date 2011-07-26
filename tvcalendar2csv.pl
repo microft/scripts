@@ -7,12 +7,6 @@ use Data::ICal;
 my $calendar_url = "http://www.pogdesign.co.uk/cat/download_ics/2af7747583b17bb008bf5c5211305089";
 my %shows = ();
 
-while(<>){
-  chomp;
-  (my $name, my $quality) = split(/;/,$_);
-  $shows{$name} = $quality;
-} 
-
 
 my $ua = LWP::UserAgent->new();
 my $ical = $ua->get($calendar_url)->content;
@@ -23,6 +17,13 @@ for my $entry (@{$entries}){
   $value =~ s/\s*(.+)\s+Episodes, TV Shows/$1/;
   $shows{$value} = '720p';
 }
+
+# input CSV file overides online calendar
+while(<>){
+  chomp;
+  (my $name, my $quality) = split(/;/,$_);
+  $shows{$name} = $quality;
+} 
 
 for my $show (keys %shows){
   print "$show;$shows{$show};\n";
