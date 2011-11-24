@@ -17,15 +17,18 @@ my $feed = XML::FeedPP::RSS->new();
 my $search_url = 'http://ezrss.it/search/index.php?simple&show_name=NAME&date=&quality=QUALITY&release_group=&mode=rss';
 while(<>){
   chomp;
-  (my $name, my $quality) = split(/;/,$_);
+  (my $name, my $quality, my $extra) = split(/;/,$_);
   $name =~ s/[\#\!\*\$]/ /g;
-  $name =~ s/^\s+//g;
-  $name =~ s/\s+$//g;
+  $name =~ s/(^\s+|\s+$)//g;
+  #$name =~ s/\s+$//g;
   $name =~ s/\s+/+/g;
   my $url = $search_url;
   $url =~ s/NAME/$name/;
   $url =~ s/QUALITY/$quality/;
-  #print "$url\n";
+  if ($extra) {
+      $url .= $extra;
+  }
+  #print $url ,"\n";
   $feed->merge($url);
 }
 my $hostname = `hostname -f`;
