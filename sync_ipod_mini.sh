@@ -1,4 +1,5 @@
 #!/bin/bash
+# a small script to rsync podcasts into my iPod Mini (running Rockbox)
 
 directory="/Volumes/MINI"
 if [ -d $directory ]; then
