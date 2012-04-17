@@ -15,6 +15,7 @@ for my $entry (@{$entries}){
   my %properties = %{$entry->properties()};
   my $value = $properties{'categories'}[0]->value;
   $value =~ s/\s*(.+)\s+Episodes, TV Shows/$1/;
+  $value =~ s/\://g;
   $shows{$value} = '720p';
 }
 
