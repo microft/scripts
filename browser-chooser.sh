@@ -7,7 +7,7 @@
 #
 
 # The last option should be the default. To be used if none are running
-BROWSERS=( firefox chromium-browser opera google-chrome x-www-browser )
+BROWSERS=( firefox chromium-browser opera /opt/google/chrome/chrome x-www-browser )
 
 for browser in ${BROWSERS[@]}; do
   RUNNING=$(pgrep -u $USER -f $browser);

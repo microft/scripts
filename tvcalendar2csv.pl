@@ -25,8 +25,10 @@ while(<>){
   $shows{$name} = $quality;
 } 
 
-for my $show (keys %shows){
-  print "$show;$shows{$show};\n";
+for my $k (keys %shows){
+  my $show = $k;
+  $show =~ s/The//gi;
+  print "$show;$shows{$k};\n";
 }
 
 
