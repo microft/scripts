@@ -14,8 +14,9 @@ my $entries = Data::ICal->new(data => $ical)->entries;
 for my $entry (@{$entries}){
   my %properties = %{$entry->properties()};
   my $value = $properties{'categories'}[0]->value;
-  $value =~ s/\s*(.+)\s+Episodes, TV Shows/$1/;
-  $value =~ s/\://g;
+
+  $value = sanitize($value);
+
   $shows{$value} = '720p';
 }
 
@@ -27,10 +28,19 @@ while(<>){
 } 
 
 for my $k (keys %shows){
-  my $show = $k;
-  $show =~ s/The//gi;
-  print "$show;$shows{$k};\n";
+  print "$k;$shows{$k};\n";
 }
 
 
+sub sanitize {
+  my $name = shift;
 
+  $name =~ s/\s*(.+)\s+Episodes, TV Shows/$1/;
+  $name =~ s/\://g;
+  $name =~ s/\bThe\b//gi;
+  $name =~ s/^\s+//g;
+  $name =~ s/\s+$//g;
+
+  return $name;
+
+}
