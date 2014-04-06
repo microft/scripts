@@ -40,6 +40,7 @@ sub sanitize {
   $name =~ s/\bThe\b//gi;
   $name =~ s/^\s+//g;
   $name =~ s/\s+$//g;
+  $name =~ s/[[:punct:]]//g;
 
   return $name;
 
